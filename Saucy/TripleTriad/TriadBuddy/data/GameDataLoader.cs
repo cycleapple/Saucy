@@ -514,7 +514,8 @@ public class GameDataLoader
                         if (cardOb != null)
                         {
                             var cardInfo = gameCardDB.FindById(cardOb.Id);
-                            cardInfo?.ItemId = itemId;
+                            if (cardInfo != null)
+                                cardInfo.ItemId = itemId;
 
                             kvp.Value.rewardCardIds.Add(cardOb.Id);
                         }

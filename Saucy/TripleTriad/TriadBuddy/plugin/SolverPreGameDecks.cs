@@ -50,7 +50,8 @@ public class SolverPreGameDecks
         }
 
         // keep game solver up to date
-        SolverUtils.solverGame?.lastGameNpc = newPreGameNpc;
+        if (SolverUtils.solverGame is { } solverGame)
+            solverGame.lastGameNpc = newPreGameNpc;
 
         var canReadFromProfile = profileGS != null && !profileGS.HasErrors;
         var canProcessDecks = !parseCtx.HasErrors &&
