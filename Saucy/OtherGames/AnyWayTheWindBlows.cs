@@ -53,10 +53,10 @@ public class AnyWayTheWindBlows : Module
                     using var _ = ImRaii.PushColor(ImGuiCol.ChildBg, new Vector4(0, 0, 0, 0.8f));
                     ImGui.SetCursorPosX(4f * ImGuiHelpers.GlobalScale);
 
-                    if (Player.Position.X - Stage.SafeSpot.Position.X > 0.015) ImGui.Text("move left");
-                    else if (Stage.SafeSpot.Position.X - Player.Position.X > 0.015) ImGui.Text("move right");
-                    else if (Player.Position.Z < Stage.SafeSpot.Position.Z) ImGui.Text("move down");
-                    else if (Player.Position.Z > Stage.SafeSpot.Position.Z) ImGui.Text("move up");
+                    if (Player.Position.X - Stage.SafeSpot.Position.X > 0.015) ImGui.Text("向左移動");
+                    else if (Stage.SafeSpot.Position.X - Player.Position.X > 0.015) ImGui.Text("向右移動");
+                    else if (Player.Position.Z < Stage.SafeSpot.Position.Z) ImGui.Text("向下移動");
+                    else if (Player.Position.Z > Stage.SafeSpot.Position.Z) ImGui.Text("向上移動");
                 }
 
                 ImGui.End();

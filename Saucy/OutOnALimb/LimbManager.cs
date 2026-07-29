@@ -450,37 +450,42 @@ public unsafe class LimbManager : IDisposable
     public void DrawSettings()
     {
         var save = false;
-        ImGuiEx.TextWrapped($"How to use: enable module, walk up to the Out on a Limb machine in Gold Saucer, input number of games you want to play to play automatically or access the machine manually to play one game.");
+        ImGuiEx.TextWrapped("使用方式：啟用模組後走到金碟遊樂園的「孤樹無援」機台前，輸入遊玩次數以自動進行，或手動操作機台遊玩一場。");
         if (TidyChat)
-            ImGuiEx.TextWrapped(ImGuiColors.DalamudRed, $@"Tidychat Warning: Please ensure you do not have ""You sense something..."" messages (Advanced -> System messages) hidden or this will not work");
+            ImGuiEx.TextWrapped(ImGuiColors.DalamudRed, "Tidy Chat 警告：請確認未隱藏「感覺到什麼……」訊息（進階 → 系統訊息），否則此功能無法運作。");
         ImGui.Separator();
-        save |= ImGui.Checkbox($"Enable", ref Cfg.EnableLimb);
+        save |= ImGui.Checkbox("啟用", ref Cfg.EnableLimb);
         ImGui.SetNextItemWidth(100f);
-        ImGui.InputInt("Games to play", ref GamesToPlay.ValidateRange(0, 9999));
+        ImGui.InputInt("遊玩次數", ref GamesToPlay.ValidateRange(0, 9999));
         ImGui.SameLine();
-        if (ImGui.Button("Max")) GamesToPlay = 9999;
-        ImGui.Checkbox($"Stop at next double down", ref Exit);
+        if (ImGui.Button("最大")) GamesToPlay = 9999;
+        ImGui.Checkbox("在下一次加倍時停止", ref Exit);
 
         ImGui.Separator();
         ImGui.SetNextItemWidth(100f);
-        save |= ImGuiEx.EnumCombo("Difficulty", ref Cfg.LimbDifficulty);
+        var difficulty = (int)Cfg.LimbDifficulty;
+        if (ImGui.Combo("難度", ref difficulty, ["泰坦", "魔界花", "仙人刺"], 3))
+        {
+            Cfg.LimbDifficulty = (LimbDifficulty)difficulty;
+            save = true;
+        }
         ImGui.SetNextItemWidth(100f);
-        save |= ImGuiEx.SliderInt($"Tolerance", ref Cfg.Tolerance.ValidateRange(1, 4), 1, 4);
+        save |= ImGuiEx.SliderInt("容許值", ref Cfg.Tolerance.ValidateRange(1, 4), 1, 4);
         ImGui.SameLine();
-        if (ImGui.Button("Default##1")) Cfg.Tolerance = new LimbConfig().Tolerance;
+        if (ImGui.Button("預設##1")) Cfg.Tolerance = new LimbConfig().Tolerance;
         var req = CalcRequiredFPS();
         var current = ImGui.GetIO().Framerate;
         var delta = current - req;
-        ImGuiEx.TextWrapped(delta > -1 ? ImGuiColors.ParsedGreen : (delta > -(req * 0.15f) ? ImGuiColors.DalamudYellow : ImGuiColors.DalamudRed), $"Required framerate: {req}\nYour framerate: {(int)current}");
-        ImGuiEx.TextWrapped($"Reducing tolerance or difficulty will reduce required framerate.");
+        ImGuiEx.TextWrapped(delta > -1 ? ImGuiColors.ParsedGreen : (delta > -(req * 0.15f) ? ImGuiColors.DalamudYellow : ImGuiColors.DalamudRed), $"所需影格率：{req}\n目前影格率：{(int)current}");
+        ImGuiEx.TextWrapped("降低容許值或難度可減少所需影格率。");
         ImGui.SetNextItemWidth(100f);
-        save |= ImGui.DragInt($"Step", ref Cfg.Step, 0.05f);
+        save |= ImGui.DragInt("步進值", ref Cfg.Step, 0.05f);
         ImGui.SameLine();
-        if (ImGui.Button("Default##2")) Cfg.Step = new LimbConfig().Step;
+        if (ImGui.Button("預設##2")) Cfg.Step = new LimbConfig().Step;
         ImGui.SetNextItemWidth(100f);
-        save |= ImGui.DragInt($"Stop at remaining time with big win", ref Cfg.StopAt, 0.5f);
+        save |= ImGui.DragInt("高額獎勵時於剩餘秒數停止", ref Cfg.StopAt, 0.5f);
         ImGui.SetNextItemWidth(100f);
-        save |= ImGui.DragInt($"Stop at remaining time with little win", ref Cfg.HardStopAt, 0.5f);
+        save |= ImGui.DragInt("低額獎勵時於剩餘秒數停止", ref Cfg.HardStopAt, 0.5f);
 
         if (save) C.Save();
     }
