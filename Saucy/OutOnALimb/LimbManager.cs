@@ -296,6 +296,7 @@ public unsafe class LimbManager : IDisposable
                     ClientLanguage.French => @"Gain de PGS en cas de réussite : ([0-9]+)",
                     ClientLanguage.German => @"Momentaner Gewinn: ([0-9]+)",
                     ClientLanguage.Japanese => @"MGP.([0-9]+)",
+                    ClientLanguage.ChineseTraditional or ClientLanguage.TraditionalChinese => @"金碟幣：([0-9]+)",
                     _ => throw new ArgumentOutOfRangeException(nameof(Svc.ClientState.ClientLanguage))
                 }).Match(text);
                 if (matches.Success)
